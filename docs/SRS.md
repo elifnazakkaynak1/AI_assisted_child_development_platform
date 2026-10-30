@@ -68,17 +68,25 @@ decision-making without making decisions itself.
 | FR-M4-04 | The system shall allow children to mark their assigned tasks as completed. | Must |
 | FR-M4-05 | The system shall display the completion status of each task to the user who assigned it. | Must |
 
-### M5 – (module name)
+### M5 – Specialist entries
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M5-01 | | |
+| FR-M5-01 | The system shall allow linked specialists to add dated observation entries for a child. | Must |
+| FR-M5-02 | The system shall allow parents and linked specialists to view observation entries for a child. | Must |
+| FR-M5-03 | The system shall allow linked specialists to edit observation entries for children they are linked to. | Must |
+| FR-M5-04 | The system shall mark modified observation entries as "edited". | Must |
+| FR-M5-05 | The system shall prevent children from accessing specialist observation entries. | Must |
 
-### M6 – (module name)
+### M6 – Documents
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M6-01 | | |
+| FR-M6-01 | The system shall allow parents and linked specialists to upload PDF or image files for a child. | Must |
+| FR-M6-02 | The system shall display a list of documents associated with a child, including each document's name, file type, uploader, and upload date. | Must |
+| FR-M6-03 | The system shall allow parents and linked specialists to view documents associated with a child. | Must |
+| FR-M6-04 | The system shall allow parents and linked specialists to download documents associated with a child. | Must |
+| FR-M6-05 | The system shall prevent children from accessing documents. | Must |
 
 ### M7 – (module name)
 
