@@ -124,20 +124,11 @@ decision-making without making decisions itself.
 
 ## 4. Critical Flows and Acceptance Criteria
 
-> Choose the 3 most important user flows. Each one will have an end-to-end test (Week 10).
-> Write acceptance criteria as Given / When / Then.
-
 | Flow | Related requirements | Acceptance criteria |
 |---|---|---|
-| Flow 1: | FR-… | **Given** … **When** … **Then** … |
-| Flow 2: | FR-… | **Given** … **When** … **Then** … |
-| Flow 3: | FR-… | **Given** … **When** … **Then** … |
-
----
-
-## 5. Use Case Diagram (optional)
-
-> A simple diagram showing users and main use cases. You can use Mermaid (renders on GitHub) or add an image from `docs/img/`.
+| Flow 1: Specialist Linking and Access Control | FR-M1-01, FR-M2-01, FR-M2-02, FR-M2-03, FR-M2-04, FR-M2-06 | **Given** a logged-in parent and a registered specialist who is not linked to the child, **When** the parent links the specialist using their email address and type and later confirms unlinking, **Then** the specialist shall appear in the linked specialists list after linking, be removed after unlinking, and receive an error when attempting to access the child's data through the API. |
+| Flow 2: Schedule and Task Completion | FR-M3-01, FR-M3-03, FR-M3-04, FR-M4-01, FR-M4-02, FR-M4-03, FR-M4-04, FR-M4-05 | **Given** a parent and a child with valid accounts, **When** the parent adds an event to the child's weekly schedule and assigns a task, and the child marks the task as completed, **Then** the child shall see the scheduled event and assigned task, and the parent shall see the task's completed status. |
+| Flow 3: Specialist Observation and AI Summary | FR-M5-01, FR-M5-02, FR-M8-01, FR-M8-02, FR-M8-03, FR-M8-04, FR-M8-05 | **Given** a specialist linked to a child and a parent authorized to view the child's records, **When** the specialist adds a dated observation and the parent requests a weekly AI summary, **Then** the system shall display a role-based summary labelled "AI-generated", linked to its source records, using only records the parent is authorized to access. |
 
 ---
 
