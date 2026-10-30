@@ -21,29 +21,33 @@ decision-making without making decisions itself.
 
 | User type | Description |
 |---|---|
-| Parent | Manages the child's data, views all records, links or unlinks specialists, manages weekly schedules, assigns and tracks tasks, accesses documents and observation records, views weekly statistics, and receives role-based AI summaries. |
-| Specialist | Accesses records of linked children, manages weekly schedules, assigns and tracks tasks, creates and edits dated observations, uploads and accesses documents, and receives role-based AI summaries. |
+| Parent | Manages the child's data, views all records, links or unlinks specialists, adds and views weekly schedule events, assigns and tracks tasks, accesses documents and observation records, views weekly statistics, and receives role-based AI summaries. |
+| Specialist | Accesses records of linked children, adds and views weekly schedule events, assigns and tracks tasks, creates and edits dated observations, uploads and accesses documents, and receives role-based AI summaries. |
 | Child | Views their own weekly schedule and assigned tasks and marks tasks as completed. The child cannot access specialist observations or documents. |
  
 ---
 
 ## 2. Functional Requirements
 
-> Group requirements by module (M1–M8, same as your Jira epics). Use the format: "The system shall …".
-> Priority: **Must** (required for v1.0) / **Should** (planned) / **Could** (if time allows).
-
-### M1 – (module name)
+### M1 – Login and roles
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M1-01 | The system shall … | Must |
-| FR-M1-02 | | |
+| FR-M1-01 | The system shall allow registered users to log in using their email address and password. | Must |
+| FR-M1-02 | The system shall determine each user's role (parent, specialist, or child) based on their account. | Must |
+| FR-M1-03 | The system shall restrict users to the screens authorized for their roles. | Must |
 
-### M2 – (module name)
+### M2 – Linking specialists
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M2-01 | | |
+| FR-M2-01 | The system shall allow parents to link registered specialists to their children by specifying the specialists' email addresses and types. | Must |
+| FR-M2-02 | The system shall allow parents to view the list of specialists linked to their children. | Must |
+| FR-M2-03 | The system shall require parental confirmation before unlinking a specialist from a child. | Must |
+| FR-M2-04 | The system shall allow parents to unlink a specialist from their child after confirmation. | Must |
+| FR-M2-05 | The system shall display an error message when a parent attempts to link a specialist using an unregistered email address. | Must |
+| FR-M2-06 | The system shall reject every API request concerning a child from a specialist who is not linked to that child and return an error response. | Must |
+| FR-M2-07 | The system shall allow specialists to view the list of children they are linked to. | Must |
 
 ### M3 – (module name)
 
