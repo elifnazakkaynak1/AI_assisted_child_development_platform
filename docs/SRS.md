@@ -136,4 +136,4 @@ decision-making without making decisions itself.
 
 | Date | Change | By |
 |---|---|---|
-| | First version | |
+| 2026-10-30 | First version: Added the introduction, functional requirements (M1–M8), non-functional requirements, and critical flows with acceptance criteria. | yagmurtekinarslan |
