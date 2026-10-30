@@ -9,7 +9,13 @@ The AI component summarizes records by role; it supports decisions, it never mak
 - Git
 
 ## Setup
-Backend and frontend setup steps will be added as the skeleton is built.
+### Backend
+```
+cd backend
+npm install
+npm start
+```
+The API runs on http://localhost:3000. Check it at http://localhost:3000/api/health
 
 ## Project structure
 - `backend/`  Node.js + Express + SQLite API
