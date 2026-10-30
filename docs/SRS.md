@@ -88,17 +88,26 @@ decision-making without making decisions itself.
 | FR-M6-04 | The system shall allow parents and linked specialists to download documents associated with a child. | Must |
 | FR-M6-05 | The system shall prevent children from accessing documents. | Must |
 
-### M7 – (module name)
+### M7 – Weekly statistics
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M7-01 | | |
+| FR-M7-01 | The system shall allow parents to select a week for viewing task completion statistics. | Must |
+| FR-M7-02 | The system shall calculate and display the overall task completion rate for the selected week. | Must |
+| FR-M7-03 | The system shall calculate and display the task completion rate for each development area for the selected week. | Must |
 
-### M8 – (module name)
+### M8 – Role-based AI summary
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M8-01 | | |
+| FR-M8-01 | The system shall generate AI summaries of a child's weekly records for parents and linked specialists. | Must |
+| FR-M8-02 | The system shall use separate AI prompts for parents and specialists based on their roles. | Must |
+| FR-M8-03 | The system shall label each AI-generated summary as "AI-generated". | Must |
+| FR-M8-04 | The system shall link each AI-generated summary to its source records. | Must |
+| FR-M8-05 | The system shall send only records that the requesting user is authorized to access to the AI component. | Must |
+| FR-M8-06 | The system shall not automatically make decisions based on AI-generated summaries. | Must |
+| FR-M8-07 | The system shall prevent AI-generated summaries from presenting diagnoses or treatment recommendations. | Must |
+| FR-M8-08 | The system shall allow parents to mark AI-generated summaries as helpful or incorrect. | Must |
 
 ---
 
