@@ -49,17 +49,24 @@ decision-making without making decisions itself.
 | FR-M2-06 | The system shall reject every API request concerning a child from a specialist who is not linked to that child and return an error response. | Must |
 | FR-M2-07 | The system shall allow specialists to view the list of children they are linked to. | Must |
 
-### M3 – (module name)
+### M3 – Weekly schedule
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M3-01 | | |
+| FR-M3-01 | The system shall allow parents to add events to their children's weekly schedules. | Must |
+| FR-M3-02 | The system shall allow linked specialists to add events to a child's weekly schedule. | Must |
+| FR-M3-03 | The system shall display a child's scheduled events in a weekly view to the parent and linked specialists. | Must |
+| FR-M3-04 | The system shall allow children to view only their own weekly schedules. | Must |
 
-### M4 – (module name)
+### M4 – Tasks
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-M4-01 | | |
+| FR-M4-01 | The system shall allow parents and linked specialists to assign tasks to a child. | Must |
+| FR-M4-02 | The system shall allow task assigners to specify a title, description, development area, and due date for each task. | Must |
+| FR-M4-03 | The system shall allow children to view their assigned tasks. | Must |
+| FR-M4-04 | The system shall allow children to mark their assigned tasks as completed. | Must |
+| FR-M4-05 | The system shall display the completion status of each task to the user who assigned it. | Must |
 
 ### M5 – (module name)
 
