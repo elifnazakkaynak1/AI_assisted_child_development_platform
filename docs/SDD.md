@@ -44,10 +44,10 @@ flowchart LR
 | **M2** | ConnectionsPage, SpecialistController, AccessMiddleware | FR-M2-01, FR-M2-02, FR-M2-03, FR-M2-04, FR-M2-05, FR-M2-06, FR-M2-07|
 | **M3** | ScheduleScreen, ScheduleController | FR-M3-01, FR-M3-02, FR-M3-03, FR-M3-04|
 | **M4** | TasksScreen, TaskController | FR-M4-01, FR-M4-02, FR-M4-03, FR-M4-04, FR-M4-05|
-| **M5** | | |
-| **M6** | | |
-| **M7** | | |
-| **M8** | | |
+| **M5** | Specialist entries | FR-M5-01, FR-M5-02, FR-M5-03, FR-M5-04, FR-M5-05|
+| **M6** | Documents | FR-M6-01, FR-M6-02, FR-M6-03, FR-M6-04, FR-M6-05|
+| **M7** | Weekly statistics | FR-M7-01, FR-M7-02, FR-M7-03|
+| **M8** | Role-based AI summary | FR-M8-01, FR-M8-02, FR-M8-03, FR-M8-04, FR-M8-05, FR-M8-06, FR-M8-07, FR-M8-08|
 
 ---
 
