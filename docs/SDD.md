@@ -52,19 +52,69 @@ flowchart LR
 ---
 
 ## 3. Data Model
-
-> Main entities and their relationships. A simple ER diagram is enough.
-
 ```mermaid
 erDiagram
-    USER ||--o{ ORDER : places
+    USER ||--o{ LINK : "parent_or_specialist"
+    USER ||--o{ EVENT : "creator_or_child"
+    USER ||--o{ TASK : "assigner_or_child"
+    USER ||--o{ OBSERVATION : "author_or_child"
+    USER ||--o{ DOCUMENT : "uploader_or_child"
+    USER ||--o{ AI_SUMMARY : "parent_or_specialist "
     USER {
-        int id
+        int user_id PK
+        string email UK
+        string password
         string name
+        string role "parent, specialist, child"
+        string type "doctor, teacher etc."
     }
-    ORDER {
-        int id
-        date created_at
+    LINK {
+        int link_id PK
+        int parent_id FK
+        int specialist_id FK
+        int child_id FK
+    }
+    EVENT {
+        int event_id PK
+        int child_id FK
+        int created_by FK
+        string title
+        string event_date
+    }
+    TASK {
+        int task_id PK
+        int child_id FK
+        int assigned_by FK
+        string title
+        string description
+        string area "academic, social etc."
+        string due_date
+        bool is_completed "0 or 1"
+    }
+    OBSERVATION {
+        int observation_id PK
+        int child_id FK
+        int specialist_id FK
+        string title
+        string content
+        string date
+        bool is_edited "0 or 1"
+    }
+    DOCUMENT {
+        int document_id PK
+        int child_id FK
+        int uploaded_by FK
+        string file_name
+        string file_type
+        string upload_date
+    }
+    AI_SUMMARY {
+        int summary_id PK
+        int child_id FK
+        string week_date
+        string text
+        string user_role "parent or specialist"
+        string feedback "helpful or incorrect"
     }
 ```
 
