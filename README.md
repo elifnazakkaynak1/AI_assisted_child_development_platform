@@ -19,6 +19,14 @@ npm start
 `npm run seed` creates the local SQLite database (`backend/data/app.db`) and fills it with synthetic users.
 The API runs on http://localhost:3000. Check it at http://localhost:3000/api/health
 
+### Frontend
+```
+cd frontend
+npm install
+npm run dev
+```
+The app runs on http://localhost:5173
+
 ## Project structure
 - `backend/`  Node.js + Express + SQLite API
 - `frontend/` React (Vite) application
