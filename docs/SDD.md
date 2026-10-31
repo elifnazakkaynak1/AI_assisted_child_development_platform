@@ -122,12 +122,23 @@ erDiagram
 
 ## 4. API / Interfaces
 
-> List the main endpoints or interfaces between components. Skip this section if your system has no API.
-
 | Method | Endpoint | Description | Module |
 |---|---|---|---|
-| GET | | | |
-| POST | | | |
+| POST | /api/auth/login | User login and role-based token generation | M1 |
+| GET | /api/specialists | Get linked specialists (Parent) or children (Specialist) | M2 |
+| POST | /api/specialists | Link a registered specialist using email and type | M2 |
+| DELETE | /api/specialists/:id | Unlink a specialist from the child's profile | M2 |
+| GET | /api/schedule/:childId | Fetch weekly schedule events for a child | M3 |
+| POST | /api/schedule/:childId | Add a new event to the child's weekly schedule | M3 |
+| GET | /api/tasks/:childId | Get assigned tasks (Parent/Specialist) or own tasks (Child) | M4 |
+|POST | /api/tasks/:childId | Assign a new task or update completion status | M4 |
+| GET | /api/observations/:childId | Fetch dated observation entries for a child | M5 |
+| POST | /api/observations/:childId | Add a new observation entry or update an edited entry | M5 |
+| PUT | /api/observations/:id | Edit an observation (sets is_edited=1) | M5 |
+| GET | /api/documents/:childId | List, upload (POST), or download documents | M6 |
+| GET | /api/analytics/:childId | Fetch weekly completion stats and role-based AI summaries | M7 |
+| GET | /api/analytics/:childId | Fetch weekly completion stats and role-based AI summaries | M8 |
+
 
 ---
 
