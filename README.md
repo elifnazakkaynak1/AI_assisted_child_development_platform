@@ -26,6 +26,9 @@ npm install
 npm run dev
 ```
 The app runs on http://localhost:5173
+To use the app, start the backend first (see above), then open http://localhost:5173
+and click "Check backend". The Vite dev server forwards `/api` requests to
+http://localhost:3000, so both servers must be running at the same time.
 
 ## Project structure
 - `backend/`  Node.js + Express + SQLite API
