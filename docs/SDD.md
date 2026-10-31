@@ -8,7 +8,6 @@
 
 ## 1. Architecture Overview
 
-## 1. Architecture Overview
 
 The platform is a local client-server web application with three main layers. The React frontend displays role-based screens for parents, specialists, and children. The Node.js/Express backend handles requests, JWT authentication, and strict data access control. At the base, a local SQLite database stores all records, while a backend AI module generates secure, role-filtered weekly summaries using an external LLM.
 
@@ -39,18 +38,16 @@ flowchart LR
 
 ## 2. Module Design
 
-> One row per module (M1–M8, same as your SRS and Jira epics). Name the main components (classes, services, pages) that implement each module.
-
 | Module | Main components | Implements requirements |
 |---|---|---|
-| M1 | | FR-M1-01, … |
-| M2 | | |
-| M3 | | |
-| M4 | | |
-| M5 | | |
-| M6 | | |
-| M7 | | |
-| M8 | | |
+| **M1** | AuthContext, LoginPage, AuthController | FR-M1-01, FR-M1-02, FR-M1-03|
+| **M2** | ConnectionsPage, SpecialistController, AccessMiddleware | FR-M2-01, FR-M2-02, FR-M2-03, FR-M2-04, FR-M2-05, FR-M2-06, FR-M2-07|
+| **M3** | ScheduleScreen, ScheduleController | FR-M3-01, FR-M3-02, FR-M3-03, FR-M3-04|
+| **M4** | TasksScreen, TaskController | FR-M4-01, FR-M4-02, FR-M4-03, FR-M4-04, FR-M4-05|
+| **M5** | | |
+| **M6** | | |
+| **M7** | | |
+| **M8** | | |
 
 ---
 
@@ -122,3 +119,4 @@ sequenceDiagram
 | Date | Change | By |
 |---|---|---|
 | | First version | |
+
