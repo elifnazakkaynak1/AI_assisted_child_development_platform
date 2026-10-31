@@ -144,24 +144,89 @@ erDiagram
 
 ## 5. Critical Flows
 
-> Use the same 3 critical flows as SRS Section 4. Add one sequence diagram for each.
-
 ### Flow 1:
 
 ```mermaid
-sequenceDiagram
-    actor User
-    User->>Frontend: action
-    Frontend->>Backend: request
-    Backend->>Database: query
-    Database-->>Backend: result
-    Backend-->>Frontend: response
-    Frontend-->>User: result shown
+    sequenceDiagram
+    actor Parent as Parent
+    actor Specialist as Specialist
+    participant Frontend
+    participant Backend
+    participant Database
+
+    Parent->>Frontend: Link specialist 
+    Frontend->>Backend: Link request
+    Backend->>Database: Save link query
+    Database-->>Backend: Result success
+    Backend-->>Frontend: Link response
+    Frontend-->>Parent: Specialist listed result shown
+
+    Parent->>Frontend: Confirm unlink
+    Frontend->>Backend: Unlink request
+    Backend->>Database: Delete link query
+    Database-->>Backend: Result success
+    Backend-->>Frontend: Unlink response
+    Frontend-->>Parent: Removed from list result shown
+
+    Specialist->>Frontend: Access child data
+    Frontend->>Backend: Access data request
+    Backend->>Database: Check link query
+    Database-->>Backend: Result not found
+    Backend-->>Frontend: Error response 
+    Frontend-->>Specialist: Access denied error shown
+    
 ```
 
 ### Flow 2:
 
+```mermaid
+    sequenceDiagram
+    actor Parent as Parent
+    actor Child as Child
+    participant Frontend
+    participant Backend
+    participant Database
+
+    Parent->>Frontend: Add event and assign task
+    Frontend->>Backend: Create event and task request
+    Backend->>Database: Save schedule and task query
+    Database-->>Backend: Result success
+    Backend-->>Frontend: Create response
+    Frontend-->>Parent: Task and event status result shown
+
+    Child->>Frontend: Mark task as completed
+    Frontend->>Backend: Complete task request
+    Backend->>Database: Update task status query
+    Database-->>Backend: Result success
+    Backend-->>Frontend: Complete response
+    Frontend-->>Child: Task completed result shown
+```
+
 ### Flow 3:
+
+```mermaid
+    sequenceDiagram
+    actor Specialist as Specialist
+    actor Parent as Parent
+    participant Frontend
+    participant Backend
+    participant Database
+
+    Specialist->>Frontend: Add dated observation 
+    Frontend->>Backend: Create observation request
+    Backend->>Database: Save observation query
+    Database-->>Backend: Result success
+    Backend-->>Frontend: Create response
+    Frontend-->>Specialist: Observation saved result shown
+
+    Parent->>Frontend: Request weekly AI summary 
+    Frontend->>Backend: Fetch AI summary request
+    Backend->>Database: Fetch authorized records query
+    Database-->>Backend: Result authorized data
+    Backend-->>Frontend: Role-based AI summary response
+    Frontend-->>Parent: AI summary with source links result shown
+
+```
 
 ---
 
