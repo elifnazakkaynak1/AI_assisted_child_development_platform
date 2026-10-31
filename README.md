@@ -32,6 +32,12 @@ The app runs on http://localhost:5173
 - `frontend/` React (Vite) application
 - `docs/`     SRS, SDD and PMP
 
+## AI module
+All AI calls go through `backend/src/ai.js`. It runs in mock mode by default
+(`AI_MODE=mock`): it returns a fixed response labelled "AI-generated" and does not
+call any external service. Demo (backend must be running):
+http://localhost:3000/api/ai/summary
+
 ## Team
 - Elifnaz AKKAYNAK
 - Livaze Yağmur TEKİNARSLAN 
