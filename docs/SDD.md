@@ -232,11 +232,15 @@ erDiagram
 
 ## 6. User Interface
 
-> Add sketches or screenshots of the main screens (hand-drawn wireframes are fine).
-
 | Screen | Image | Module |
 |---|---|---|
-| | `docs/img/…` | |
+| Login Screen | `docs/img/login_page.png` | M1 |
+| Parent Weekly Dashboard | `docs/img/parent_dashboard.png` | M3, M7, M8 |
+| Linked Specialist Management | `docs/img/parent_specialist.png` | M2 |
+| Parent Documents Page | `docs/img/parent_documents.png` | M6 |
+| Child My Task View | `docs/img/child_my_tasks.png` | M3, M4 |
+| Specialist Child Profile View | `docs/img/specialist_child_profile.png` | M6, M8|
+| Specialist Task Tracking | `docs/img/specialsit_assigning_task.png` | M4, M8 |
 
 ---
 
