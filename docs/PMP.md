@@ -37,29 +37,27 @@
 
 ### Work Packages (Epics)
 
-> One row per Jira epic. Number of tasks = how many tasks you created under that epic.
-
 | Epic | Owner | Number of tasks | Planned sprint(s) |
 |---|---|---|---|
-| M1 | | | |
-| M2 | | | |
-| M3 | | | |
-| M4 | | | |
-| M5 | | | |
-| M6 | | | |
-| M7 | | | |
-| M8 | | | |
+| M1 | | 6| 2|
+| M2 | | 7| 2|
+| M3 | | 6| 2|
+| M4 | | 7| 2|
+| M5 | | 6| 3|
+| M6 | | 6| 3|
+| M7 | | 4| 3|
+| M8 | | 8| 3|
+
+Note: Bonus tasks are not included in number of tasks.
 
 ### Sprint Plan
 
-> One row per Jira sprint. Align sprints with the weekly schedule.
-
 | Sprint | Weeks | Sprint goal | Ends with |
 |---|---|---|---|
-| Sprint 1 | | | Walking skeleton (v0.0), Week 6 |
-| Sprint 2 | | | Release v0.1, mid-term |
-| Sprint 3 | | | Release v0.2, Week 10 |
-| Sprint 4 | | | Release v1.0, final |
+| Sprint 1 | 4, 5, 6| Incremental development on Github, tracked in Jira, SRS, SDD, PMP-1 and PMP-2| Walking skeleton (v0.0), Week 6 |
+| Sprint 2 | 7, 8| Development of M1-M4, PMP-3, PMP-4, first end-to-end test with CI| Release v0.1, mid-term |
+| Sprint 3 | 9, 10| Development of M5-M8, PMP-5, end-to-end test for 3 critical flows, final versions of SRS and SDD| Release v0.2, Week 10 |
+| Sprint 4 | 11, 12| End-to-end test for each of M1-M8| Release v1.0, final |
 
 ---
 
