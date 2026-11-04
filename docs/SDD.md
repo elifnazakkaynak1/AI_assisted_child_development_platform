@@ -248,5 +248,6 @@ erDiagram
 
 | Date | Change | By |
 |---|---|---|
-| | First version | |
+| 2026-11-01 | First version | akinakca |
+
 
