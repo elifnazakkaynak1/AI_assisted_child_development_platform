@@ -39,14 +39,14 @@
 
 | Epic | Owner | Number of tasks | Planned sprint(s) |
 |---|---|---|---|
-| M1 | | 6| 2|
-| M2 | | 7| 2|
-| M3 | | 6| 2|
-| M4 | | 7| 2|
-| M5 | | 6| 3|
-| M6 | | 6| 3|
-| M7 | | 4| 3|
-| M8 | | 8| 3|
+| M1 | Akın AKCA| 8| 2|
+| M2 | Elifnaz AKKAYNAK| 7| 2|
+| M3 | Livaze Yağmur TEKİNARSLAN| 6| 2|
+| M4 | Livaze Yağmur TEKİNARSLAN| 7| 2|
+| M5 | Unassigned| 6| 3|
+| M6 | Unassigned| 6| 3|
+| M7 | Unassigned| 4| 3|
+| M8 | Unassigned| 8| 3|
 
 Note: Bonus tasks are not included in number of tasks.
 
