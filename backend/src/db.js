@@ -15,7 +15,9 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    role TEXT NOT NULL CHECK (role IN ('parent', 'specialist', 'child'))
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('parent', 'specialist', 'child')),
+    type TEXT
   )
 `);
 
