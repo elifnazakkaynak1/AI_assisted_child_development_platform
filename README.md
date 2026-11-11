@@ -10,12 +10,28 @@ The AI component summarizes records by role; it supports decisions, it never mak
 
 ## Setup
 ### Backend
-```
-cd backend
-npm install
-npm run seed
-npm start
-```
+Before running the backend server, you need to configure the environment variables.
+
+1. Navigate to the `backend` directory:
+   ```bash
+   cd backend
+   ```
+2. Copy the example environment file to create your local `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+3. Open the newly created `.env` file and update the variables if needed:
+   ```env
+   PORT=3000
+   JWT_SECRET=jwt_key
+   AI_MODE=mock
+   ```
+4. Install dependencies, seed the database with synthetic users, and start the server:
+   ```bash
+   npm install
+   npm run seed
+   npm start
+   ```
 `npm run seed` creates the local SQLite database (`backend/data/app.db`) and fills it with synthetic users.
 The API runs on http://localhost:3000. Check it at http://localhost:3000/api/health
 
