@@ -4,6 +4,7 @@ const db = require('./db');
 const bcrypt = require('bcryptjs'); 
 
 
+db.exec('DROP TABLE IF EXISTS events');
 db.exec('DROP TABLE IF EXISTS relations');         //veritabanı temizle
 db.exec('DROP TABLE IF EXISTS users');
   
@@ -18,6 +19,7 @@ db.exec(`
     role TEXT NOT NULL CHECK (role IN ('parent', 'specialist', 'child')),
     type TEXT
   );
+
   CREATE TABLE relations (                     
     child_id INTEGER NOT NULL,
     related_user_id INTEGER NOT NULL,
@@ -26,6 +28,19 @@ db.exec(`
     FOREIGN KEY (child_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (related_user_id) REFERENCES users(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  child_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  event_date TEXT NOT NULL,
+  start_time TEXT NOT NULL,
+  end_time TEXT NOT NULL,
+  created_by INTEGER NOT NULL,
+  FOREIGN KEY (child_id) REFERENCES users(id),
+  FOREIGN KEY (created_by) REFERENCES users(id)
+  );
+
 `);
 
 // Uydurma kullanıcı verilerini ekle
@@ -67,6 +82,33 @@ function seedUsers() {
     { child: 'child@example.com',  adult: 'psychologist@example.com', type: 'specialist' }, // Deniz -> Elif
   ];
 
+    const events = [
+    {
+      childEmail: 'child@example.com',
+      creatorEmail: 'parent@example.com',
+      title: 'Çocuk doktoru kontrolü',
+      date: '2026-11-13',
+      startTime: '10:00',
+      endTime: '11:00'
+    },
+    {
+      childEmail: 'child@example.com',
+      creatorEmail: 'teacher@example.com',
+      title: 'Öğretmen görüşmesi',
+      date: '2026-11-11',
+      startTime: '15:00',
+      endTime: '16:00'
+    },
+    {
+      childEmail: 'child@example.com',
+      creatorEmail: 'parent@example.com',
+      title: 'Yüzme antrenmanı',
+      date: '2026-11-12',
+      startTime: '14:00',
+      endTime: '15:00'
+    }
+  ];
+
   // Veritabanına kullanıcıları ekle
   const insert = db.prepare(
     'INSERT INTO users (name, email, password_hash, role, type) VALUES (?, ?, ?, ?, ?)'
@@ -90,13 +132,44 @@ function seedUsers() {
     }
   });
 
+// Etkinlikleri veritabanına eklemek için SQL sorgusu
+  const insertEvent = db.prepare(`
+    INSERT INTO events
+    (child_id, title, event_date, start_time, end_time, created_by)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+
+  // Örnek etkinlikleri tek bir işlemde veritabanına kaydet
+  const seedEventsTransaction = db.transaction((eventList) => {
+    for (const event of eventList) {
+      const child = getUserId.get(event.childEmail);
+      const creator = getUserId.get(event.creatorEmail);
+
+      if (!child || !creator) {
+        throw new Error('Child or event creator not found.');
+      }
+
+      insertEvent.run(
+        child.id,
+        event.title,
+        event.date,
+        event.startTime,
+        event.endTime,
+        creator.id
+      );
+    }
+  });
+
+
   // Transaction'ı çalıştır
   seedTransaction(users);
   seedRelationsTransaction(relations);
+  seedEventsTransaction(events);
 
   console.log('Synthetic users successfully seeded! (All passwords: "test")');
   console.log(db.prepare('SELECT id, name, email, role, type FROM users').all());
   console.log(db.prepare('SELECT * FROM relations').all());
+  console.log(db.prepare('SELECT * FROM events').all());
 }
 
 try {
