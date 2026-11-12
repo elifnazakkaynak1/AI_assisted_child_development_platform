@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {generateSummary} = require('./ai'); //ai.js modülünü import ediyoruz.
 const db = require('./db'); //db.js modülünü import ediyoruz.
+const { authenticateToken, authorizeRoles } = require('./middleware/auth');
 
 const app = express(); //app adında bir uygulama nesnesi oluşturuyoruz.
 app.use(express.json()); //json formatında gelen verileri okuyabilmek için express.json() middleware'ini kullanıyoruz.
@@ -64,16 +65,13 @@ app.get('/api/ai/summary', async (req, res) => { // /api/ai/summary endpoint'ine
   res.json(summary);
 });
 
-app.get('/api/demo/user', (req, res) => { // /api/demo/user endpoint'ine gelen GET isteğine yanıt olarak veritabanından bir kullanıcı çekiyoruz.
-  
+app.get('/api/me', authenticateToken, (req, res) => {
   const user = db
-    .prepare('SELECT id, name, role FROM users ORDER BY id LIMIT 1')
-    .get();
+    .prepare('SELECT id, name, email, role, type FROM users WHERE id = ?')
+    .get(req.user.id);
 
   if (!user) {
-    return res
-      .status(404)
-      .json({ error: 'No users found. Run "npm run seed" in backend.' });
+    return res.status(404).json({ error: 'No users found. Run "npm run seed" in backend.' });
   }
 
   res.json(user);
