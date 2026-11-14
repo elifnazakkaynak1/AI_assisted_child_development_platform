@@ -267,80 +267,21 @@ app.post(
   }
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.get('/api/children',
+  authenticateToken,
+  authorizeRoles('parent', 'specialist'),
+  (req, res) => {
+
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    const children = db
+    .prepare('SELECT c.id,c.name FROM users c JOIN relations r ON c.id = r.child_id WHERE r.related_user_id = ? AND r.relation_type = ?')
+    .all(userId, userRole);
+
+    return res.status(200).json(children);
+  }
+);
 
 
 
@@ -353,10 +294,10 @@ app.get('/api/specialists',
     const userRole = req.user.role;
 
     if(userRole === 'parent') {
-      const childs = db.prepare('SELECT child_id FROM relations WHERE related_user_id = ? AND relation_type = ?')
+      const children = db.prepare('SELECT c.id, c.name FROM users c JOIN relations r ON c.id = r.child_id WHERE r.related_user_id = ? AND r.relation_type = ?')
       .all(userId, 'parent');
 
-      const childIds = childs.map(row => row.child_id);
+      const childIds = children.map(row => row.id);
 
       const results = [];
 
@@ -374,10 +315,10 @@ app.get('/api/specialists',
     }
 
     else if (userRole === 'specialist') {
-      const childs = db.prepare('SELECT child_id FROM relations WHERE related_user_id = ? AND relation_type = ?')
+      const children = db.prepare('SELECT child_id FROM relations WHERE related_user_id = ? AND relation_type = ?')
       .all(userId, 'specialist');
 
-      const childIds = childs.map(row => row.child_id);
+      const childIds = children.map(row => row.child_id);
 
       const results = [];
       for (const childId of childIds) {
