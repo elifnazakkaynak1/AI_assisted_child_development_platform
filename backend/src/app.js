@@ -5,6 +5,7 @@
 const express = require('express'); //express modülünü import ediyoruz.
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const {generateSummary} = require('./ai'); //ai.js modülünü import ediyoruz.
 const db = require('./db'); //db.js modülünü import ediyoruz.
 const { authenticateToken, authorizeRoles } = require('./middleware/auth');
@@ -12,6 +13,7 @@ const { requireChildAccess } = require('./middleware/childAccess'); // Çocuğa 
 
 const app = express(); //app adında bir uygulama nesnesi oluşturuyoruz.
 app.use(express.json()); //json formatında gelen verileri okuyabilmek için express.json() middleware'ini kullanıyoruz.
+app.use(cors());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'test_fallback_secret_key';
 
@@ -23,7 +25,7 @@ app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(401).json({ error: 'Wrong email or password.' });
+    return res.status(401).json({ error: 'E-posta veya şifre hatalı.' });
   }
 
   const user = db
@@ -31,12 +33,12 @@ app.post('/api/auth/login', (req, res) => {
     .get(email);
 
   if (!user) {
-    return res.status(401).json({ error: 'Wrong email or password.' });
+    return res.status(401).json({ error: 'E-posta veya şifre hatalı.' });
   }
 
   const isPasswordValid = bcrypt.compareSync(password, user.password_hash);
   if (!isPasswordValid) {
-    return res.status(401).json({ error: 'Wrong email or password.' });
+    return res.status(401).json({ error: 'E-posta veya şifre hatalı.' });
   }
 
   const token = jwt.sign(
