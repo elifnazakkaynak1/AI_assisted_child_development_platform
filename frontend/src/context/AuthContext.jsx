@@ -30,7 +30,9 @@ export function AuthProvider({ children }) {
         } else {
           logout();
         }
-      } catch {
+      } catch (error) {
+        console.error('Oturum doğrulanamadı:', error);
+        logout();
       } finally {
         setLoading(false);
       }
