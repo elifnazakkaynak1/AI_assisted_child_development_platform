@@ -195,5 +195,75 @@ app.get(
 );
 
 
+// Saatin HH:MM formatında geçerli olup olmadığını kontrol et
+const isValidTime = (value) => {
+  return typeof value === 'string' &&
+    /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+};
+
+// Parent veya bağlı specialist yeni etkinlik oluşturabilir
+app.post(
+  '/api/children/:childId/events',
+  authenticateToken,
+  authorizeRoles('parent', 'specialist'),
+  requireChildAccess,
+  (req, res) => {
+    const childId = Number(req.params.childId);
+    const { title, date, startTime, endTime } = req.body ?? {};
+
+    // Zorunlu alanları ve tarih-saat değerlerini doğrula
+    if (
+      typeof title !== 'string' ||
+      title.trim() === '' ||
+      !isValidDate(date) ||
+      !isValidTime(startTime) ||
+      !isValidTime(endTime) ||
+      startTime >= endTime
+    ) {
+      return res.status(400).json({
+        error: 'Invalid event information.'
+      });
+    }
+
+    // Etkinliğin gerçekten bir çocuk için oluşturulduğunu doğrula
+    const child = db.prepare(
+      'SELECT id FROM users WHERE id = ? AND role = ?'
+    ).get(childId, 'child');
+
+    if (!child) {
+      return res.status(404).json({
+        error: 'Child not found.'
+      });
+    }
+
+    // Etkinliği veritabanına kaydet
+    const result = db.prepare(`
+      INSERT INTO events (
+        child_id,
+        title,
+        event_date,
+        start_time,
+        end_time,
+        created_by
+      )
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(
+      childId,
+      title.trim(),
+      date,
+      startTime,
+      endTime,
+      req.user.id
+    );
+
+    // Oluşturulan etkinliği ID'siyle birlikte geri döndür
+    const event = db.prepare(
+      'SELECT * FROM events WHERE id = ?'
+    ).get(result.lastInsertRowid);
+
+    return res.status(201).json(event);
+  }
+);
+
 
 module.exports = app; // app nesnesini dışarıya açıyoruz, daha sonra server.js kullanacak.
