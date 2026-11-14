@@ -266,4 +266,128 @@ app.post(
 );
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.get('/api/specialists',
+   authenticateToken,
+   authorizeRoles('parent', 'specialist'),
+   (req, res) => {
+    
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    if(userRole === 'parent') {
+      const childs = db.prepare('SELECT child_id FROM relations WHERE related_user_id = ? AND relation_type = ?')
+      .all(userId, 'parent');
+
+      const childIds = childs.map(row => row.child_id);
+
+      const results = [];
+
+      for (const childId of childIds) {
+        const specialists = db.prepare(`
+          SELECT r.child_id AS childId, u.id, u.name, u.email, u.type
+          FROM users u
+          JOIN relations r ON u.id = r.related_user_id
+          WHERE r.child_id = ? AND r.relation_type = ?
+        `).all(childId, 'specialist');
+        results.push(...specialists);
+      }
+
+      return res.status(200).json(results);
+    }
+
+    else if (userRole === 'specialist') {
+      const childs = db.prepare('SELECT child_id FROM relations WHERE related_user_id = ? AND relation_type = ?')
+      .all(userId, 'specialist');
+
+      const childIds = childs.map(row => row.child_id);
+
+      const results = [];
+      for (const childId of childIds) {
+        const findings = db.prepare('SELECT id, name FROM users WHERE id = ?').all(childId);
+        results.push(...findings);
+      }
+      
+      return res.status(200).json(results);
+    }
+  }
+);
+
+
+
 module.exports = app; // app nesnesini dışarıya açıyoruz, daha sonra server.js kullanacak.
