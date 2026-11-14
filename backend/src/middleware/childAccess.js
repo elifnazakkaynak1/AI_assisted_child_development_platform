@@ -7,9 +7,10 @@ function requireChildAccess(req, res, next) {
         return res.status(401).json({ error: 'Access denied. No user information.' });
     }
   
-    // İstek parametrelerinden childId'yi alır ve geçerli bir sayı olup olmadığını kontrol eder.
-    const childId = Number(req.params.childId);
-    if (!Number.isInteger(childId)) {
+    // childId sırayla: URL parametresi, istek gövdesi, query
+    const rawId = req.params.childId ?? req.body?.childId ?? req.query?.childId;
+    const childId = Number(rawId);
+    if (!Number.isInteger(childId) || childId < 1) {
         return res.status(400).json({ error: 'Invalid child ID.' });
     }
 
@@ -23,9 +24,9 @@ function requireChildAccess(req, res, next) {
     }
 
     // Kullanıcı parent veya specialist ise child ile ilişkisi var mı yok mu kontrol edielir.
-    const relation = db.prepare(
-        'SELECT * FROM relations WHERE child_id = ? AND related_user_id = ?'
-    ).get(childId, req.user.id);
+    const relation = db
+    .prepare('SELECT * FROM relations WHERE child_id = ? AND related_user_id = ?')
+    .get(childId, req.user.id);
 
     // Eğer ilişki varsa kullanıcıya izin verilir aksi takdirde 403 hatası döndürülür.
     if(relation){
