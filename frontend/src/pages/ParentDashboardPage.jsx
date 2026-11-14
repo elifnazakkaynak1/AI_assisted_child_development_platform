@@ -1,5 +1,6 @@
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 export default function ParentDashboardPage() {
   const { user } = useAuth();
@@ -29,6 +30,13 @@ export default function ParentDashboardPage() {
           <p style={{ color: '#57534e', fontSize: '0.95rem' }}>
             Haftalık program, görev takibi, uzman gözlemleri ve yapay zekâ özetleri bu alanda yer alacaktır.
           </p>
+          
+          <Link
+            to="/parent/specialists"
+            style={{ display: 'inline-block', marginTop: '1rem', color: '#115e59', fontWeight: 600 }}
+          >
+            Bağlı uzmanları yönet →
+          </Link>
         </div>
       </main>
     </div>

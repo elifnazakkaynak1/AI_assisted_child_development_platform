@@ -5,6 +5,7 @@ import ParentDashboardPage from './pages/ParentDashboardPage';
 import SpecialistChildrenPage from './pages/SpecialistChildrenPage';
 import ChildTasksPage from './pages/ChildTasksPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
+import LinkedSpecialistsPage from './pages/LinkedSpecialistsPage';
 
 function getHomePathByRole(role) {
   if (role === 'parent') return '/parent/dashboard';
@@ -76,6 +77,15 @@ function App() {
                 <ParentDashboardPage />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/parent/specialists"
+             element={
+              <ProtectedRoute allowedRoles={['parent']}>
+                 <LinkedSpecialistsPage />
+              </ProtectedRoute>
+             }
           />
 
           <Route
