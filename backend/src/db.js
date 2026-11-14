@@ -28,6 +28,20 @@ db.exec(`
     FOREIGN KEY (child_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (related_user_id) REFERENCES users(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  child_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  event_date TEXT NOT NULL,
+  start_time TEXT NOT NULL,
+  end_time TEXT NOT NULL,
+  created_by INTEGER NOT NULL,
+
+  FOREIGN KEY (child_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id)
+  );
+
 `);
 
 module.exports = db;
