@@ -1,34 +1,58 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
+import ParentDashboardPage from './pages/ParentDashboardPage';
+import SpecialistChildrenPage from './pages/SpecialistChildrenPage';
+import ChildTasksPage from './pages/ChildTasksPage';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+
+function getHomePathByRole(role) {
+  if (role === 'parent') return '/parent/dashboard';
+  if (role === 'specialist') return '/specialist/children';
+  if (role === 'child') return '/child/tasks';
+  return '/login';
+}
 
 function ProtectedRoute({ allowedRoles, children }) {
   const { user, loading } = useAuth();
 
-  if (loading) return <div>Yükleniyor...</div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (!allowedRoles.includes(user.role)) {
-    if (user.role === 'parent') return <Navigate to="/parent/dashboard" replace />;
-    if (user.role === 'specialist') return <Navigate to="/specialist/children" replace />;
-    if (user.role === 'child') return <Navigate to="/child/tasks" replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return children;
 }
 
-// Geçici rol ekranları
-function PlaceholderScreen({ title }) {
-  const { user, logout } = useAuth();
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1>{title}</h1>
-      <p>Hoş geldiniz, <strong>{user?.name}</strong> (Rol: {user?.role})</p>
-      <button onClick={logout} style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}>
-        Çıkış Yap
-      </button>
-    </div>
-  );
+function PublicOnlyRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  }
+
+  if (user) {
+    return <Navigate to={getHomePathByRole(user.role)} replace />;
+  }
+
+  return children;
+}
+
+function RootRedirect() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center' }}>Yükleniyor...</div>;
+  }
+
+  return <Navigate to={user ? getHomePathByRole(user.role) : '/login'} replace />;
 }
 
 function App() {
@@ -36,13 +60,20 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={
+              <PublicOnlyRoute>
+                <LoginPage />
+              </PublicOnlyRoute>
+            }
+          />
 
           <Route
             path="/parent/dashboard"
             element={
               <ProtectedRoute allowedRoles={['parent']}>
-                <PlaceholderScreen title="Aile Ana Paneli" />
+                <ParentDashboardPage />
               </ProtectedRoute>
             }
           />
@@ -51,7 +82,7 @@ function App() {
             path="/specialist/children"
             element={
               <ProtectedRoute allowedRoles={['specialist']}>
-                <PlaceholderScreen title="Uzman Paneli - Bağlı Çocuklar" />
+                <SpecialistChildrenPage />
               </ProtectedRoute>
             }
           />
@@ -60,12 +91,14 @@ function App() {
             path="/child/tasks"
             element={
               <ProtectedRoute allowedRoles={['child']}>
-                <PlaceholderScreen title="Çocuk Paneli - Görevlerim" />
+                <ChildTasksPage />
               </ProtectedRoute>
             }
           />
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+          <Route path="*" element={<RootRedirect />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
