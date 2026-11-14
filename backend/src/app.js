@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const {generateSummary} = require('./ai'); //ai.js modülünü import ediyoruz.
 const db = require('./db'); //db.js modülünü import ediyoruz.
 const { authenticateToken, authorizeRoles } = require('./middleware/auth');
+const { requireChildAccess } = require('./middleware/childAccess'); // import ediyoruz.
 
 const app = express(); //app adında bir uygulama nesnesi oluşturuyoruz.
 app.use(express.json()); //json formatında gelen verileri okuyabilmek için express.json() middleware'ini kullanıyoruz.
@@ -76,5 +77,66 @@ app.get('/api/me', authenticateToken, (req, res) => {
 
   res.json(user);
 });
+
+//specialist ekleme endpoint'i
+app.post('/api/specialists',
+  authenticateToken,
+  authorizeRoles('parent'),
+  requireChildAccess,
+  (req, res) => {
+
+    const childId = Number(req.body.childId);
+    const {email, type} = req.body;
+
+    if(typeof email !== 'string' || email.trim() === '') {
+      return res.status(400).json({ error: 'Invalid email format.' });
+    }
+
+    const specialist = db
+    .prepare('SELECT id, role, type FROM users WHERE email = ?')
+    .get(email.trim());
+
+    if (!specialist || specialist.role !== 'specialist' || (type && specialist.type !== type)) {
+      return res.status(404).json({ error: 'Specialist not found or user is not a specialist.' });
+    }
+
+    try {
+      db.prepare
+      ('INSERT INTO relations (child_id, related_user_id, relation_type) VALUES (?, ?, ?)')
+      .run(childId, specialist.id, 'specialist');
+      return res.status(200).json({ message: 'Specialist linked successfully.' });
+    }catch (error) {  
+      if(error.code === 'SQLITE_CONSTRAINT_PRIMARYKEY') {
+        return res.status(409).json({ error: 'Specialist is already linked to this child.' });
+      }
+      return res.status(500).json({ error: 'Error occurred while adding specialist.' });
+    }
+  }   
+);
+
+//specialist unlinkleme endpointi
+app.delete('/api/specialists/:id',
+  authenticateToken,
+  authorizeRoles('parent'),
+  requireChildAccess,
+  (req, res) => {
+
+    const specialistId = Number(req.params.id);
+    const childId = Number(req.query.childId);
+
+    if(!Number.isInteger(specialistId) || specialistId < 1 || !Number.isInteger(childId) || childId < 1) {
+      return res.status(400).json({ error: 'Invalid specialist ID or child ID.' });
+    }
+
+    const result = db.prepare('DELETE FROM relations WHERE child_id = ? AND related_user_id = ? AND relation_type = ?')
+      .run(childId, specialistId, 'specialist');
+
+      if (result.changes === 0) {
+        return res.status(404).json({ error: 'Specialist not linked to this child.' });
+      }
+
+      return res.status(200).json({ message: 'Specialist unlinked successfully.' })
+  }
+);
 
 module.exports = app; // app nesnesini dışarıya açıyoruz, daha sonra server.js kullanacak.
