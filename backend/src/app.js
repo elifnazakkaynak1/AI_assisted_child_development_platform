@@ -258,6 +258,145 @@ app.post(
 );
 
 
+/**
+ * G3-65 — Görev Listeleme API'si
+ * Parent, bağlı Specialist ve Child erişim yetkileri
+ * bulunan çocuğun görevlerini listeleyebilir.
+ */
+app.get(
+  '/api/children/:childId/tasks',
+  authenticateToken,
+  authorizeRoles('parent', 'specialist', 'child'),
+  requireChildAccess,
+  (req, res) => {
+    const childId = Number(req.params.childId);
+
+    // Çocuk ID'sini doğrula
+    if (!Number.isSafeInteger(childId) || childId <= 0) {
+      return res.status(400).json({
+        error: 'Invalid child ID.'
+      });
+    }
+
+    try {
+      // Çocuğun görevlerini bitiş tarihine göre sırala
+      const tasks = db.prepare(`
+        SELECT
+          task_id,
+          child_id,
+          assigned_by,
+          title,
+          description,
+          area,
+          due_date,
+          status,
+          assigned_at,
+          completed_at
+        FROM tasks
+        WHERE child_id = ?
+        ORDER BY due_date ASC, task_id ASC
+      `).all(childId);
+
+      return res.status(200).json(tasks);
+    } catch (error) {
+      console.error('Task listing failed:', error);
+
+      return res.status(500).json({
+        error: 'Could not retrieve tasks.'
+      });
+    }
+  }
+);
+
+
+/**
+ * G3-65 — Görev Tamamlama API'si
+ * Yalnızca Child kendi görevini tamamlandı
+ * olarak işaretleyebilir.
+ */
+app.patch(
+  '/api/children/:childId/tasks/:taskId/complete',
+  authenticateToken,
+  authorizeRoles('child'),
+  requireChildAccess,
+  (req, res) => {
+    const childId = Number(req.params.childId);
+    const taskId = Number(req.params.taskId);
+
+    // Çocuk ve görev ID'lerini doğrula
+    if (
+      !Number.isSafeInteger(childId) ||
+      childId <= 0 ||
+      !Number.isSafeInteger(taskId) ||
+      taskId <= 0
+    ) {
+      return res.status(400).json({
+        error: 'Invalid child ID or task ID.'
+      });
+    }
+
+    try {
+      // Görev ilgili çocuğa aitse ve henüz
+      // tamamlanmadıysa durumunu güncelle
+      const result = db.prepare(`
+        UPDATE tasks
+        SET
+          status = 'completed',
+          completed_at = CURRENT_TIMESTAMP
+        WHERE task_id = ?
+          AND child_id = ?
+          AND status = 'pending'
+      `).run(taskId, childId);
+
+      // Güncel görev bilgilerini getir
+      const task = db.prepare(`
+        SELECT
+          task_id,
+          child_id,
+          assigned_by,
+          title,
+          description,
+          area,
+          due_date,
+          status,
+          assigned_at,
+          completed_at
+        FROM tasks
+        WHERE task_id = ? AND child_id = ?
+      `).get(taskId, childId);
+
+      // Görev mevcut değilse 404 döndür
+      if (!task) {
+        return res.status(404).json({
+          error: 'Task not found.'
+        });
+      }
+
+      // Zaten tamamlanmış görev tekrar güncellenmez
+      if (result.changes === 0) {
+        return res.status(200).json({
+          message: 'Task already completed.',
+          task
+        });
+      }
+
+      // Tamamlanan görevin güncel bilgilerini döndür
+      return res.status(200).json({
+        message: 'Task completed successfully.',
+        task
+      });
+    } catch (error) {
+      console.error('Task completion failed:', error);
+
+      return res.status(500).json({
+        error: 'Could not complete task.'
+      });
+    }
+  }
+);
+
+
+
 // Belirtilen tarih aralığında çocuğun etkinliklerini listele
 app.get(
   '/api/children/:childId/events',
