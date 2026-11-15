@@ -40,3 +40,8 @@ jobs:
         working-directory: ./backend
         run: npm test
     
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright E2E tests
+        run: npx playwright test
