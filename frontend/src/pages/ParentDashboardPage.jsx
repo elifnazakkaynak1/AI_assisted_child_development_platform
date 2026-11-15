@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ScheduleScreen from '../features/schedule/ScheduleScreen';
 import AddEventForm from '../features/schedule/AddEventForm';
+import ParentSpecialistTaskList from '../features/tasks/ParentSpecialistTaskList';
+import AssignTaskForm from '../features/tasks/AssignTaskForm';
 
 export default function ParentDashboardPage() {
 
@@ -16,6 +18,7 @@ const [selectedChildId, setSelectedChildId] = useState('');
 const [loadingChildren, setLoadingChildren] = useState(true);
 const [childrenError, setChildrenError] = useState('');
 const [calendarVersion, setCalendarVersion] = useState(0);
+const [taskVersion, setTaskVersion] = useState(0);
 
 // Parent'ın erişebildiği çocukları backend'den getir
 useEffect(() => {
@@ -99,74 +102,94 @@ useEffect(() => {
           </Link>
         </div>
 
-{/* M3 — Haftalık program ve etkinlik ekleme */}
-<section style={{ marginTop: '28px' }}>
-  {loadingChildren && (
-    <p role="status">Çocuklar yükleniyor...</p>
-  )}
+    {/* M3 — Haftalık program ve etkinlik ekleme */}
+    <section style={{ marginTop: '28px' }}>
+      {loadingChildren && (
+        <p role="status">Çocuklar yükleniyor...</p>
+      )}
 
-  {childrenError && (
-    <p role="alert" style={{ color: '#a34235' }}>
-      {childrenError}
-    </p>
-  )}
+      {childrenError && (
+        <p role="alert" style={{ color: '#a34235' }}>
+          {childrenError}
+        </p>
+      )}
 
-  {!loadingChildren && !childrenError && children.length === 0 && (
-    <p>Henüz görüntülenebilecek çocuk bulunamadı.</p>
-  )}
+      {!loadingChildren && !childrenError && children.length === 0 && (
+        <p>Henüz görüntülenebilecek çocuk bulunamadı.</p>
+      )}
 
-  {!loadingChildren && !childrenError && children.length > 0 && (
-    <>
-      <div style={{ marginBottom: '20px' }}>
-        <label
-          htmlFor="parent-child"
-          style={{ color: '#344941', fontWeight: 600 }}
-        >
-          Çocuk seçin
-        </label>
+      {!loadingChildren && !childrenError && children.length > 0 && (
+        <>
+          <div style={{ marginBottom: '20px' }}>
+            <label
+              htmlFor="parent-child"
+              style={{ color: '#344941', fontWeight: 600 }}
+            >
+              Çocuk seçin
+            </label>
 
-        <select
-          id="parent-child"
-          value={selectedChildId}
-          onChange={e => setSelectedChildId(e.target.value)}
-          style={{
-            display: 'block',
-            marginTop: '8px',
-            padding: '11px',
-            minWidth: '220px',
-            border: '1px solid #dce6e0',
-            borderRadius: '9px',
-            backgroundColor: '#ffffff',
-            color: '#344941'
-          }}
-        >
-          {children.map(child => (
-            <option key={child.id} value={child.id}>
-              {child.name}
-            </option>
-          ))}
-        </select>
-      </div>
+            <select
+              id="parent-child"
+              value={selectedChildId}
+              onChange={e => setSelectedChildId(e.target.value)}
+              style={{
+                display: 'block',
+                marginTop: '8px',
+                padding: '11px',
+                minWidth: '220px',
+                border: '1px solid #dce6e0',
+                borderRadius: '9px',
+                backgroundColor: '#ffffff',
+                color: '#344941'
+              }}
+            >
+              {children.map(child => (
+                <option key={child.id} value={child.id}>
+                  {child.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <ScheduleScreen
-        childId={selectedChildId}
-        token={token}
-        refreshKey={calendarVersion}
-      />
+          <ScheduleScreen
+            childId={selectedChildId}
+            token={token}
+            refreshKey={calendarVersion}
+          />
 
-      <div style={{ marginTop: '24px' }}>
-        <AddEventForm
-          role={user?.role}
-          childId={selectedChildId}
-          token={token}
-          onEventAdded={() =>
-            setCalendarVersion(previous => previous + 1)
-          }
-        />
-      </div>
-    </>
-  )}
-</section>
+          <div style={{ marginTop: '24px' }}>
+            <AddEventForm
+              role={user?.role}
+              childId={selectedChildId}
+              token={token}
+              onEventAdded={() =>
+                setCalendarVersion(previous => previous + 1)
+              }
+            />
+          </div>
+          </>
+        )}
+      </section>
+
+       {/* M4 — Görev atama ve takip */}
+        {selectedChildId != null && token && (
+          <>
+           <AssignTaskForm
+              role={user?.role}
+              childId={selectedChildId}
+              token={token}
+              onTaskAssigned={() =>
+                setTaskVersion(previous => previous + 1)
+              }
+            />
+
+            <ParentSpecialistTaskList
+              key={`${selectedChildId}-${taskVersion}`}
+              childId={selectedChildId}
+              token={token}
+            />
+          </>
+        )}
 
       </main>
     </div>

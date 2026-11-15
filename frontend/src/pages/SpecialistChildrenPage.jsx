@@ -3,6 +3,8 @@ import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import ScheduleScreen from '../features/schedule/ScheduleScreen';
 import AddEventForm from '../features/schedule/AddEventForm';
+import ParentSpecialistTaskList from '../features/tasks/ParentSpecialistTaskList';
+import AssignTaskForm from '../features/tasks/AssignTaskForm';
 
 export default function SpecialistChildrenPage() {
   const { user, token } = useAuth();
@@ -12,6 +14,7 @@ export default function SpecialistChildrenPage() {
   const [error, setError] = useState('');
   const [selectedChildId, setSelectedChildId] = useState(null);
   const [calendarVersion, setCalendarVersion] = useState(0);
+  const [taskVersion, setTaskVersion] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -189,6 +192,26 @@ export default function SpecialistChildrenPage() {
                 />
               </div>
             </section>
+          )}
+
+          {/* M4 — Bağlı çocuğun görevleri */}
+          {selectedChildId != null && token && (
+            <>
+              <AssignTaskForm
+              role={user?.role}
+              childId={selectedChildId}
+              token={token}
+              onTaskAssigned={() =>
+                setTaskVersion(previous => previous + 1)
+              }
+            />
+
+              <ParentSpecialistTaskList
+                key={`${selectedChildId}-${taskVersion}`}
+                childId={selectedChildId}
+                token={token}
+              />
+            </>
           )}
 
       </main>
