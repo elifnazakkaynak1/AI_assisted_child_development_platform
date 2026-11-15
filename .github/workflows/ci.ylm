@@ -19,10 +19,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js LTS
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: '22*'
+
+      - name: Install root dependencies (Playwright)
+        run: npm ci
 
       - name: Install backend dependencies
         working-directory: ./backend
