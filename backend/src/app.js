@@ -158,6 +158,106 @@ const isValidDate = (value) => {
     date.toISOString().slice(0, 10) === value;
 };
 
+
+/**
+ * G3-64 — Görev Atama API'si
+ * Parent veya çocuğa bağlı Specialist, çocuğa yeni görev atayabilir.
+ */
+app.post(
+  '/api/children/:childId/tasks',
+  authenticateToken,
+  authorizeRoles('parent', 'specialist'),
+  requireChildAccess,
+  (req, res) => {
+    const childId = Number(req.params.childId);
+    const { title, description, area, dueDate } = req.body ?? {};
+
+    // Görev için izin verilen gelişim alanları
+    const validAreas = [
+      'academic',
+      'language',
+      'motor',
+      'social-emotional',
+      'self-care'
+    ];
+
+    // Çocuk ID'sini ve gönderilen görev bilgilerini doğrula
+    if (
+      !Number.isSafeInteger(childId) ||
+      childId <= 0 ||
+      typeof title !== 'string' ||
+      title.trim() === '' ||
+      !validAreas.includes(area) ||
+      !isValidDate(dueDate) ||
+      (
+        description !== undefined &&
+        description !== null &&
+        typeof description !== 'string'
+      )
+    ) {
+      return res.status(400).json({
+        error: 'Invalid task information.'
+      });
+    }
+
+    try {
+      // Görevi veritabanına kaydet
+      // Görevi atayan kişi giriş yapan kullanıcıdır
+      const result = db.prepare(`
+        INSERT INTO tasks (
+          child_id,
+          assigned_by,
+          title,
+          description,
+          area,
+          due_date
+        )
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run(
+        childId,
+        req.user.id,
+        title.trim(),
+        typeof description === 'string'
+          ? description.trim() || null
+          : null,
+        area,
+        dueDate
+      );
+
+      // Oluşturulan görevi veritabanından getir
+      const task = db.prepare(`
+        SELECT
+          task_id,
+          child_id,
+          assigned_by,
+          title,
+          description,
+          area,
+          due_date,
+          status,
+          assigned_at,
+          completed_at
+        FROM tasks
+        WHERE task_id = ?
+      `).get(result.lastInsertRowid);
+
+      // Başarılı görev oluşturma yanıtını gönder
+      return res.status(201).json({
+        message: 'Task assigned successfully.',
+        task
+      });
+    } catch (error) {
+      // Veritabanı işlemi başarısız olursa hata döndür
+      console.error('Task assignment failed:', error);
+
+      return res.status(500).json({
+        error: 'Could not assign task.'
+      });
+    }
+  }
+);
+
+
 // Belirtilen tarih aralığında çocuğun etkinliklerini listele
 app.get(
   '/api/children/:childId/events',
