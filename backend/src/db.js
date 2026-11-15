@@ -5,10 +5,14 @@ const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
-const dataDir = path.join(__dirname, '..', 'data');
-fs.mkdirSync(dataDir, { recursive: true });
+const defaultDbPath = path.join(__dirname, '..', 'data', 'app.db');
+const dbPath = process.env.DB_PATH || defaultDbPath;
 
-const db = new Database(path.join(dataDir, 'app.db'));
+if (dbPath !== ':memory:') {
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+}
+
+const db = new Database(dbPath);
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
