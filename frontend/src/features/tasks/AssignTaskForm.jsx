@@ -2,6 +2,8 @@
 import { useState } from 'react';
 
 
+
+
 function toIsoDate(value) {
   // GG.AA.YYYY formatını kontrol et
   if (!/^\d{2}\.\d{2}\.\d{4}$/.test(value)) {
@@ -26,7 +28,8 @@ function toIsoDate(value) {
 }
 
 
-function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
+export default function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [area, setArea] = useState('');
@@ -105,6 +108,9 @@ function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
           data.error || `Görev atanamadı (HTTP ${response.status}).`
         );
       }
+
+      // Başarılı görev atamasından sonra listeyi güncelle
+      onTaskAssigned?.();
 
       // Görev başarıyla kaydedildiğinde formu temizle
       setMessage('Görev başarıyla atandı.');
@@ -249,5 +255,3 @@ function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
     </section>
   );
 }
-
-export default AssignTaskForm;

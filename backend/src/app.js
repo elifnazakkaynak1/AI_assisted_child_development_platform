@@ -294,8 +294,9 @@ app.get(
           completed_at
         FROM tasks
         WHERE child_id = ?
+          AND (? != 'specialist' OR assigned_by = ?)
         ORDER BY due_date ASC, task_id ASC
-      `).all(childId);
+        `).all(childId, req.user.role, req.user.id);
 
       return res.status(200).json(tasks);
     } catch (error) {
