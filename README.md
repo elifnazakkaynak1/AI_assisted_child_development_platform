@@ -57,6 +57,15 @@ All AI calls go through `backend/src/ai.js`. It runs in mock mode by default
 call any external service. Demo (backend must be running):
 http://localhost:3000/api/ai/summary
 
+## Continuous Integration (CI)
+
+This project uses GitHub Actions (`.github/workflows/ci.yml`) to automate builds and tests on every push and pull request to `main`.
+
+- **Environment:** Runs on Ubuntu with Node.js LTS.
+- **Security & AI Mock:** Uses `AI_MODE=mock` and a dummy `JWT_SECRET` so no real API keys or external LLM calls are required during CI runs.
+- **Pipeline Steps:** Installs dependencies (`npm ci`), builds the React (Vite) frontend, and executes backend unit/API tests (Jest + Supertest).
+
+
 ## Team
 - Elifnaz AKKAYNAK
 - Livaze Yağmur TEKİNARSLAN 
