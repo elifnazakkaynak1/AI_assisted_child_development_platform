@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import ScheduleScreen from '../features/schedule/ScheduleScreen';
 import AddEventForm from '../features/schedule/AddEventForm';
+import AssignTaskForm from '../features/tasks/AssignTaskForm';
 
 export default function ParentDashboardPage() {
 
@@ -164,6 +165,16 @@ useEffect(() => {
           }
         />
       </div>
+
+        {/* M4 — Çocuğa görev atama */}
+        <div style={{ marginTop: '24px' }}>
+          <AssignTaskForm
+            role={user?.role}
+            childId={selectedChildId}
+            token={token}
+          />
+        </div>
+
     </>
   )}
 </section>

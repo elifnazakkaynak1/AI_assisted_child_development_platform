@@ -1,6 +1,30 @@
 
-
 import { useState } from 'react';
+
+
+function toIsoDate(value) {
+  // GG.AA.YYYY formatını kontrol et
+  if (!/^\d{2}\.\d{2}\.\d{4}$/.test(value)) {
+    return null;
+  }
+
+  const [day, month, year] = value.split('.').map(Number);
+
+  // Gerçek bir takvim tarihi olup olmadığını kontrol et
+  const date = new Date(Date.UTC(year, month - 1, day));
+
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return null;
+  }
+
+  // Backend için YYYY-MM-DD formatına dönüştür
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
 
 function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
   const [title, setTitle] = useState('');
@@ -32,12 +56,20 @@ function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
       return;
     }
 
+    const isoDueDate = toIsoDate(dueDate);
+
+    if (!isoDueDate) {
+      setError('Geçerli bir tarih girin (GG.AA.YYYY).');
+      return;
+    }
+
     const newTask = {
       title: title.trim(),
       description: description.trim(),
       area,
-      dueDate
+      dueDate: isoDueDate
     };
+
 
     setIsSubmitting(true);
 
@@ -153,31 +185,35 @@ function AssignTaskForm({ role, childId, token, onTaskAssigned }) {
             style={inputStyle}
           />
         </label>
-
         <label>
           Gelişim Alanı *
           <select
             value={area}
             onChange={e => setArea(e.target.value)}
             style={inputStyle}
+            required
           >
-            <option value="">Alan seçiniz</option>
+            <option value="" disabled hidden>
+              Gelişim alanını seçin
+            </option>
             <option value="academic">Akademik</option>
             <option value="language">Dil</option>
             <option value="motor">Motor Beceriler</option>
-            <option value="social-emotional">
-              Sosyal-Duygusal
-            </option>
+            <option value="social-emotional">Sosyal-Duygusal</option>
             <option value="self-care">Öz Bakım</option>
           </select>
         </label>
 
+
         <label>
-          Son Teslim Tarihi *
+          Tarih (GG.AA.YYYY) *
           <input
-            type="date"
+            type="text"
+            inputMode="numeric"
             value={dueDate}
             onChange={e => setDueDate(e.target.value)}
+            placeholder="Örn. 20.11.2026"
+            maxLength={10}
             style={inputStyle}
           />
         </label>

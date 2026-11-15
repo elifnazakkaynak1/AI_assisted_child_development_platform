@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import ScheduleScreen from '../features/schedule/ScheduleScreen';
 import AddEventForm from '../features/schedule/AddEventForm';
+import AssignTaskForm from '../features/tasks/AssignTaskForm';
 
 export default function SpecialistChildrenPage() {
   const { user, token } = useAuth();
@@ -185,9 +186,18 @@ export default function SpecialistChildrenPage() {
                   token={token}
                   onEventAdded={() =>
                     setCalendarVersion(previous => previous + 1)
-                  }
+               }
                 />
               </div>
+                {/* M4 — Seçilen çocuğa görev atama */}
+                <div style={{ marginTop: '24px' }}>
+                  <AssignTaskForm
+                    role={user?.role}
+                    childId={selectedChildId}
+                    token={token}
+                  />
+                </div>
+
             </section>
           )}
 
