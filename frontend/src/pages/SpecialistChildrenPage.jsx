@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import ScheduleScreen from '../features/schedule/ScheduleScreen';
+import AddEventForm from '../features/schedule/AddEventForm';
 
 export default function SpecialistChildrenPage() {
   const { user, token } = useAuth();
@@ -8,6 +10,8 @@ export default function SpecialistChildrenPage() {
   const [children, setChildren] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedChildId, setSelectedChildId] = useState(null);
+  const [calendarVersion, setCalendarVersion] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -134,11 +138,59 @@ export default function SpecialistChildrenPage() {
                     {child.name.charAt(0).toUpperCase()}
                   </div>
                   <strong style={{ color: '#1b1919' }}>{child.name}</strong>
+
+
+                  <button
+                    type="button"
+                    onClick={() => setSelectedChildId(child.id)}
+                    aria-pressed={selectedChildId === child.id}
+                    style={{
+                      marginLeft: 'auto',
+                      padding: '9px 14px',
+                      border: '1px solid #99c9b5',
+                      borderRadius: '8px',
+                      backgroundColor:
+                        selectedChildId === child.id ? '#115e59' : '#ecf7f1',
+                      color:
+                        selectedChildId === child.id ? '#ffffff' : '#115e59',
+                      cursor: 'pointer',
+                      fontWeight: 600
+                    }}
+                  >
+                    {selectedChildId === child.id
+                      ? 'Seçili program'
+                      : 'Programını aç'}
+                  </button>
+
                 </li>
               ))}
             </ul>
           )}
         </div>
+
+          {/* M3 — Seçilen çocuğun haftalık programı */}
+          {!loading && !error && selectedChildId !== null && (
+            <section style={{ marginTop: '28px' }}>
+              <ScheduleScreen
+                key={selectedChildId}
+                childId={selectedChildId}
+                token={token}
+                refreshKey={calendarVersion}
+              />
+
+              <div style={{ marginTop: '24px' }}>
+                <AddEventForm
+                  role={user?.role}
+                  childId={selectedChildId}
+                  token={token}
+                  onEventAdded={() =>
+                    setCalendarVersion(previous => previous + 1)
+                  }
+                />
+              </div>
+            </section>
+          )}
+
       </main>
     </div>
   );
