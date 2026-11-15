@@ -1,6 +1,7 @@
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 import ScheduleScreen from '../features/schedule/ScheduleScreen';
+import ChildTaskList from '../features/tasks/ChildTaskList';
 
 export default function ChildTasksPage() {
  const { user, token } = useAuth();
@@ -40,6 +41,11 @@ export default function ChildTasksPage() {
                 token={token}
               />
             </section>
+          )}
+
+          {/* M4 — Çocuğun görev listesi */}
+          {user?.id != null && token && (
+            <ChildTaskList childId={user.id} token={token} />
           )}
 
       </main>
