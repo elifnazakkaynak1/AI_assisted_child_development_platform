@@ -1,8 +1,9 @@
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
+import ScheduleScreen from '../features/schedule/ScheduleScreen';
 
 export default function ChildTasksPage() {
-  const { user } = useAuth();
+ const { user, token } = useAuth();
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fafaf9', textAlign: 'left' }}>
@@ -30,6 +31,17 @@ export default function ChildTasksPage() {
             Sana atanan görevler ve haftalık etkinliklerin bu ekranda listelenecektir.
           </p>
         </div>
+
+          {/* M3 — Child'ın kendi haftalık programı */}
+          {user?.id != null && token && (
+            <section style={{ marginTop: '28px' }}>
+              <ScheduleScreen
+                childId={user.id}
+                token={token}
+              />
+            </section>
+          )}
+
       </main>
     </div>
   );

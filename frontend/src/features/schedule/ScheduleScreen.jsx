@@ -42,8 +42,7 @@ function formatWeekRange(start, end) {
 
   return `${first} – ${last}`;
 }
-
-function ScheduleScreen({ childId, token }) {
+function ScheduleScreen({ childId, token, refreshKey = 0 }) {
   const [weekStart, setWeekStart] = useState(
     () => getMonday(new Date())
   );
@@ -132,7 +131,7 @@ function ScheduleScreen({ childId, token }) {
 
     // Hızlı hafta değişimlerinde eski isteği iptal et
     return () => controller.abort();
-  }, [childId, token, from, to, hasValidSelection]);
+ }, [childId, token, from, to, hasValidSelection, refreshKey]);
 
   function changeWeek(amount) {
     setWeekStart(previous => {
